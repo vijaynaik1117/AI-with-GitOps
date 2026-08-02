@@ -1,0 +1,8 @@
+namespace: prod
+resources:
+  - ../../base
+images:
+  - name: ghcr.io/vijaynaik1117/ai-with-gitops
+    newTag: v1
+patches:
+  - path: patch-env.yaml
