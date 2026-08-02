@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
         - name: ai-gitops-app
-          image: docker.io/vijaynaik1117/ai-with-gitops
+          image: ghcr.io/vijaynaik1117/ai-with-gitops:v1
           ports:
             - containerPort: 5000
           env:
