@@ -2,7 +2,7 @@ namespace: prod
 resources:
   - ../../base
 images:
-  - name: docker.io/vijaynaik1117/ai-with-gitops
-    newTag: v1
+  - name: docker.io/vijaynaik1117/ai-with-gitops:v2
+    newTag: v2
 patches:
   - path: patch-env.yaml
