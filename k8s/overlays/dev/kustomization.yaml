@@ -2,7 +2,7 @@ namespace: dev
 resources:
   - ../../base
 images:
-  - name: ghcr.io/vijaynaik1117/ai-with-gitops
-    newTag: v1
+  - name: docker.io/vijaynaik1117/ai-with-gitops
+    newTag: v2
 patches:
   - path: patch-env.yaml
