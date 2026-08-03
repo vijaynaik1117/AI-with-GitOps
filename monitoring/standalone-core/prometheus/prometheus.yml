@@ -1,0 +1,64 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager:9093
+
+rule_files:
+  - "/etc/prometheus/alert.rules.yml"
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'otel-collector'
+    static_configs:
+      - targets: ['otel-collector:8888']
+
+  - job_name: 'otel-collector-forwarded-app-metrics'
+    static_configs:
+      - targets: ['otel-collector:8889']
+
+  # --- Kubernetes cluster nodes (node_exporter, native install) ---
+  - job_name: 'k8s-node-exporter'
+    static_configs:
+      - targets:
+          - '192.168.1.98:9100'   # CCCA
+          - '192.168.1.97:9100'   # WN-1
+          - '192.168.1.95:9100'   # WN-2
+        labels:
+          cluster: 'home-lab'
+
+  # --- Pod/Deployment/Namespace object metrics (kube-state-metrics via NodePort) ---
+  - job_name: 'kube-state-metrics'
+    static_configs:
+      - targets:
+          - '192.168.1.98:30080'   # any node IP works, NodePort is cluster-wide
+        labels:
+          cluster: 'home-lab'
+
+  # --- Argo CD application/sync/health metrics ---
+  - job_name: 'argocd-metrics'
+    static_configs:
+      - targets:
+          - '192.168.1.98:30082'
+        labels:
+          cluster: 'home-lab'
+
+  # --- Argo CD API server metrics ---
+  - job_name: 'argocd-server-metrics'
+    static_configs:
+      - targets:
+          - '192.168.1.98:30083'
+        labels:
+          cluster: 'home-lab'
+
+  # Add more scrape targets here as needed, e.g.:
+  # - job_name: 'my-app'
+  #   static_configs:
+  #     - targets: ['<host-ip>:<port>']
