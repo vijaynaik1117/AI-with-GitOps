@@ -12,12 +12,12 @@ spec:
     spec:
       containers:
         - name: ai-gitops-app
-          image: docker.io/vijaynaik1117/ai-with-gitops:v2
+          image: docker.io/vijaynaik1117/ai-with-gitops:v3
           ports:
             - containerPort: 5000
           env:
             - name: APP_VERSION
-              value: "v2"
+              value: "v3"
             - name: ENVIRONMENT
               value: "REPLACED_BY_OVERLAY"
             - name: NODE_NAME
