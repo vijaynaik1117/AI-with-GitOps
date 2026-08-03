@@ -1,0 +1,40 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager:9093
+
+rule_files:
+  - "/etc/prometheus/alert.rules.yml"
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+
+  - job_name: 'otel-collector'
+    static_configs:
+      - targets: ['otel-collector:8888']
+
+  - job_name: 'otel-collector-forwarded-app-metrics'
+    static_configs:
+      - targets: ['otel-collector:8889']
+
+  # Optional: scrape your Kubernetes cluster nodes directly if their metrics
+  # endpoints are reachable and unauthenticated from WN-3. kubelet's /metrics
+  # normally requires a bearer token, so this only works for apps you've
+  # exposed on a plain HTTP port. Uncomment and adjust if applicable:
+  # - job_name: 'k8s-cluster-apps'
+  #   static_configs:
+  #     - targets:
+  #         - '192.168.1.98:PORT'   # CCCA
+  #         - '192.168.1.97:PORT'   # WN-1
+  #         - '192.168.1.95:PORT'   # WN-2
