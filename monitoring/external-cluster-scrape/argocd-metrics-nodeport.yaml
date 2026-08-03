@@ -1,0 +1,38 @@
+# Argo CD already runs internal metrics services (argocd-metrics,
+# argocd-server-metrics) as ClusterIP — these NodePort services just expose
+# the same metrics externally so WN-3's standalone Prometheus can reach them.
+# Apply this AFTER Argo CD itself is installed (03-argocd/install-and-sso.md).
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: argocd-metrics-external
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: argocd-metrics-external
+spec:
+  type: NodePort
+  selector:
+    app.kubernetes.io/name: argocd-application-controller
+  ports:
+    - name: metrics
+      port: 8082
+      targetPort: 8082
+      nodePort: 30082   # application/sync/health metrics: http://<any-node-ip>:30082/metrics
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: argocd-server-metrics-external
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: argocd-server-metrics-external
+spec:
+  type: NodePort
+  selector:
+    app.kubernetes.io/name: argocd-server
+  ports:
+    - name: metrics
+      port: 8083
+      targetPort: 8083
+      nodePort: 30083   # API server metrics: http://<any-node-ip>:30083/metrics
